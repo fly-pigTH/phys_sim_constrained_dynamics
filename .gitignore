@@ -1,0 +1,8 @@
+.vscode/
+
+build/
+
+*.ini
+*.jpg
+submission/
+submission.zip

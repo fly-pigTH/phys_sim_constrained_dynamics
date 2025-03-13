@@ -115,7 +115,25 @@ const Eigen::Matrix<real, 3, 6> Link::ComputePointJacobian(
     // are the linear and angular velocities of the link.
     //
     // TODO.
-    return Eigen::Matrix<real, 3, 6>::Zero();
+
+	// Task Start
+	JacobMat = Eigen::Matrix<real, 3, 3>::Zero();
+  	for(int i = 0; i < 3; ++i) {
+          JacobMat(i)(i) = 1;
+  	}
+    // build the product matrix
+    Matrix3r productMatrix = Matrix3r::Zero();
+    productMatrix << 0, -point(2), point(1),
+        			point(2), 0, -point(0),
+        			-point(1), point(0), 0;
+    // concatenate
+    Eigen::Matrix<real, 3, 6> jacobian;
+	jacobian << jacobMat, productMatrix*rotation_;
+    assert(jacobian.cols() == 6);
+    assert(jacobian.rows() == 3);
+    // Task Finished
+
+    return jacobian;
 }
 
 const Eigen::Matrix<real, 3, 6> Link::ComputeVectorJacobian(

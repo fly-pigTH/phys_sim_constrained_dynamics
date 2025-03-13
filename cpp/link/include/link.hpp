@@ -47,6 +47,7 @@ public:
     const Matrix3Xr& vertices() const { return vertices_; }
     const integer element_num() const { return element_num_; }
     const Matrix3Xi& elements() const { return elements_; }
+    // element表示三角形三个顶点的 rank
 
     const Vector3r& translation() const { return translation_; }
     const Vector3r& t() const { return translation_; }

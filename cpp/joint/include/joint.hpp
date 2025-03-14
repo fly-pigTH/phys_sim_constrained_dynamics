@@ -47,6 +47,7 @@ public:
         const link::LinkGroup& link_group) const {
         return Jphi(link_group);
     }
+    // NOTE 抽象类的纯虚函数，要求子类给出覆盖实现
     virtual const std::vector<MatrixX6r> Jphi(
         const link::LinkGroup& q) const = 0;
 

@@ -136,7 +136,7 @@ const SparseMatrixXr Simulator::ComputeMomentumMatrix(const real time_step,
     const real h = time_step;
     const real inv_h = ToReal(1) / h;
 
-    // Assemble the matrix.
+    // Assemble the matrix. This is a 三元组
     std::vector<Eigen::Triplet<real>> nonzeros;
 
     ////////////////////////////////////////////////////////////////////////////
@@ -165,15 +165,22 @@ const SparseMatrixXr Simulator::ComputeMomentumMatrix(const real time_step,
     // row and the j-th column of the matrix.
     //
     // TODO.
-    const integer i = 0;
-    const integer j = 0;
-    const real mij = 0;
-    nonzeros.emplace_back(i, j, mij);
+
+    // Task Begin
+    // rows rank=6*k+i, cols rank=6*k+j
+    for (integer k=0; k < link_num_; ++k) {
+        for (integer i=0; i < link_num_; ++i) {
+            for (integer j=0; j < link_num_; ++j) {
+                nonzeros.emplace_back(6*k+i, 6*k+j, inertia[i](j, k));
+            }
+        }
+    }
 
     const SparseMatrixXr lhs = FromTriplet(6 * link_num_,
         6 * link_num_, nonzeros);
 
     return lhs;
+    // Task end
 }
 
 const VectorXr Simulator::ComputeMomentumVector(const real time_step,
@@ -204,7 +211,19 @@ const VectorXr Simulator::ComputeMomentumVector(const real time_step,
     // first link, the next 6 elements for the second link, and so on. 
     //
     // TODO.
-    return VectorXr::Zero(link_num_ * 6);
+
+    // Task begin
+    VectorXr moment_next_mat = VectorXr::Zero(link_num_ * 6);
+
+//    for (int i=0; i < link_num_; ++i) {
+//        Vector6r force_vec, velocity_vec;
+//        force_vec << links_[i].f(), links_[i].tau();
+//        velocity_vec << links_[i].v(), links_[i].omega();
+//
+//        moment_next_mat.segment(6 * i, 6 * link_num_) = inertia[0]*velocity_vec + h*force_vec;
+//    }
+    return moment_next_mat;
+    // Task end
 }
 
 const SparseMatrixXr Simulator::ComputeJointConstraintJacobianMatrix(

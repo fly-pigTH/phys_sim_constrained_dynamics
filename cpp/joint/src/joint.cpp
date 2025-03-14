@@ -17,7 +17,7 @@ Joint::Joint(const JointType type,
 // The argument compliance = inverse stiffness. A small compliance (e.g.,
 // -> 0) means a hard constraint.
 void Joint::Initialize(const real compliance, const Options& opt) {
-
+// maybe this is a check
     CheckCondition(compliance >= 0, "joint::Joint::Initialize",
         "Compliance must be >= 0.");
     compliance_ = compliance;

@@ -51,7 +51,11 @@ const Matrix3r Link::ToWorldInertia() const {
     // figure out how to convert the inertia tensor to the world frame.
     //
     // TODO.
-    return inertia_.asDiagonal();
+
+    // Task Begin
+    // I_world = R I_B R^T, same as the inv_inertia
+    return rotation_ * inertia_.asDiagonal() * rotation_.transpose();
+    // Task end
 }
 
 const Matrix3r Link::ToInvWorldInertia() const {
@@ -117,9 +121,9 @@ const Eigen::Matrix<real, 3, 6> Link::ComputePointJacobian(
     // TODO.
 
 	// Task Start
-	JacobMat = Eigen::Matrix<real, 3, 3>::Zero();
+	Eigen::Matrix<real, 3, 3> JacobMat = Eigen::Matrix<real, 3, 3>::Zero();
   	for(int i = 0; i < 3; ++i) {
-          JacobMat(i)(i) = 1;
+          JacobMat(i, i) = 1;
   	}
     // build the product matrix
     Matrix3r productMatrix = Matrix3r::Zero();
@@ -128,7 +132,7 @@ const Eigen::Matrix<real, 3, 6> Link::ComputePointJacobian(
         			-point(1), point(0), 0;
     // concatenate
     Eigen::Matrix<real, 3, 6> jacobian;
-	jacobian << jacobMat, productMatrix*rotation_;
+	jacobian << JacobMat, productMatrix*rotation_;
     assert(jacobian.cols() == 6);
     assert(jacobian.rows() == 3);
     // Task Finished
@@ -136,6 +140,7 @@ const Eigen::Matrix<real, 3, 6> Link::ComputePointJacobian(
     return jacobian;
 }
 
+// NOTE: this function cal the J of a vector
 const Eigen::Matrix<real, 3, 6> Link::ComputeVectorJacobian(
     const Vector3r& vector) const {
 

@@ -8,6 +8,7 @@ namespace joint {
 
 class UnaryTranslationalJoint : public Joint {
 public:
+    // only has 1 link
     UnaryTranslationalJoint() : Joint(JointType::kUnaryTranslational, 9, 1),
         attach_frame_(Matrix3r::Zero()), anchor_frame_(Matrix3r::Zero()) {}
     ~UnaryTranslationalJoint() {}
@@ -23,6 +24,7 @@ protected:
     void InitializeDerived(const Options& opt) override;
 
 private:
+    // Accoring the matreials from Internet, attach is attached to the joint, anchor is a world frame
     Matrix3r attach_frame_;
     Matrix3r anchor_frame_;
 };

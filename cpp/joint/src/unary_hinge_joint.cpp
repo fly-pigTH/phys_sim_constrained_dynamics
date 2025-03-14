@@ -5,6 +5,8 @@
 namespace phys_sim_constrained_dynamics {
 namespace joint {
 
+
+// Q: phi的表达形式随意？只要等于零就保持了约束？
 const VectorXr UnaryHingeJoint::phi(const link::LinkGroup& q) const {
     this->CheckLinkGroupSize(q, "UnaryHingeJoint::phi");
 

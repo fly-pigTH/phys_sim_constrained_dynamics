@@ -213,15 +213,23 @@ const VectorXr Simulator::ComputeMomentumVector(const real time_step,
     // TODO.
 
     // Task begin
-    VectorXr moment_next_mat = VectorXr::Zero(link_num_ * 6);
 
-//    for (int i=0; i < link_num_; ++i) {
-//        Vector6r force_vec, velocity_vec;
-//        force_vec << links_[i].f(), links_[i].tau();
-//        velocity_vec << links_[i].v(), links_[i].omega();
-//
-//        moment_next_mat.segment(6 * i, 6 * link_num_) = inertia[0]*velocity_vec + h*force_vec;
-//    }
+    std::cout<< "link_num_: " << link_num_ << std::endl;
+    VectorXr moment_next_mat = VectorXr::Ones(link_num_ * 6);
+    // std::cout << moment_next_mat << std::endl;
+
+    for (int i=0; i < link_num_; ++i) {
+        // NOTE: links_ is vector of ptr to link, so we need use ->
+        Vector6r force_vec, velocity_vec;
+        force_vec << links_[i]->f(), links_[i]->tau();
+        velocity_vec << links_[i]->v(), links_[i]->omega();
+        // M consists of [mI, 0; 0, I_rotate]
+        Matrix6r M = Matrix6r::Zero();
+        M.block(0, 0, 3, 3) = links_[i]->mass() * Matrix3r::Identity();
+        M.block(3, 3, 3, 3) = inertia[i];
+        moment_next_mat.segment(6 * i, 6 * link_num_) = M*velocity_vec + h*force_vec;
+    }
+
     return moment_next_mat;
     // Task end
 }

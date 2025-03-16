@@ -25,6 +25,8 @@ const integer Simulator::AddLink(const link::LinkType type,
     const Vector3r& translation, const Matrix3r& rotation,
     const Vector3r& linear_velocity, const Vector3r& angular_velocity,
     const Options& opt) {
+        // TEST
+        std::cout << "I am here" << std::endl;
 
     const std::string error_location = "sim::Simulator::AddLink";
 

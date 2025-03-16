@@ -1,5 +1,5 @@
-#include "basic/include/config.hpp"
 #include "basic/include/log.hpp"
+#include "basic/include/config.hpp"
 
 int main() {
     phys_sim_constrained_dynamics::PrintInfo(

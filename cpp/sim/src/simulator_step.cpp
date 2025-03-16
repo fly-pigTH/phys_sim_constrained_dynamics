@@ -169,15 +169,31 @@ const SparseMatrixXr Simulator::ComputeMomentumMatrix(const real time_step,
     // Task Begin
     // rows rank=6*k+i, cols rank=6*k+j
     for (integer k=0; k < link_num_; ++k) {
-        for (integer i=0; i < link_num_; ++i) {
-            for (integer j=0; j < link_num_; ++j) {
-                nonzeros.emplace_back(6*k+i, 6*k+j, inertia[i](j, k));
+        for (integer i=0; i < 6; ++i) {
+            for (integer j=0; j < 6; ++j) {
+                std::cout << k << " " << i << " " << j << std::endl;
+                // 1. mass
+                if (i < 3 && j < 3) {
+                    if (i==j){
+                        nonzeros.emplace_back(6*k+i, 6*k+j, links_[k]->mass());     // TODO
+                    }
+                }
+                else if (i >=3 && j >= 3){
+                    // 2. inertia
+                    nonzeros.emplace_back(6*k+i, 6*k+j, inertia[k](i-3, j-3));
+                }
+                else{
+                    // do nothing
+                }
             }
         }
     }
 
     const SparseMatrixXr lhs = FromTriplet(6 * link_num_,
         6 * link_num_, nonzeros);
+
+    // check the size of lhs
+    std::cout << "lhs size: " << lhs.rows() << " " << lhs.cols() << std::endl;
 
     return lhs;
     // Task end
@@ -227,7 +243,7 @@ const VectorXr Simulator::ComputeMomentumVector(const real time_step,
         Matrix6r M = Matrix6r::Zero();
         M.block(0, 0, 3, 3) = links_[i]->mass() * Matrix3r::Identity();
         M.block(3, 3, 3, 3) = inertia[i];
-        moment_next_mat.segment(6 * i, 6 * link_num_) = M*velocity_vec + h*force_vec;
+        moment_next_mat.segment(6 * i, 6) = M*velocity_vec + h*force_vec;
     }
 
     return moment_next_mat;

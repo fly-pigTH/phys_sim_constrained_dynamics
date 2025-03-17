@@ -171,7 +171,7 @@ const SparseMatrixXr Simulator::ComputeMomentumMatrix(const real time_step,
     for (integer k=0; k < link_num_; ++k) {
         for (integer i=0; i < 6; ++i) {
             for (integer j=0; j < 6; ++j) {
-                std::cout << k << " " << i << " " << j << std::endl;
+                // std::cout << k << " " << i << " " << j << std::endl;
                 // 1. mass
                 if (i < 3 && j < 3) {
                     if (i==j){
@@ -193,7 +193,7 @@ const SparseMatrixXr Simulator::ComputeMomentumMatrix(const real time_step,
         6 * link_num_, nonzeros);
 
     // check the size of lhs
-    std::cout << "lhs size: " << lhs.rows() << " " << lhs.cols() << std::endl;
+    // std::cout << "lhs size: " << lhs.rows() << " " << lhs.cols() << std::endl;
 
     return lhs;
     // Task end
@@ -230,7 +230,7 @@ const VectorXr Simulator::ComputeMomentumVector(const real time_step,
 
     // Task begin
 
-    std::cout<< "link_num_: " << link_num_ << std::endl;
+    // std::cout<< "link_num_: " << link_num_ << std::endl;
     VectorXr moment_next_mat = VectorXr::Ones(link_num_ * 6);
     // std::cout << moment_next_mat << std::endl;
 

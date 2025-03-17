@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.20)
 project(phys_sim_constrained_dynamics)
 
 # Project-wide setup.
-set(CMAKE_BUILD_TYPE Debug)   # 构建类型为release, 这里采用debug模式用于调试
+set(CMAKE_BUILD_TYPE release)   # 构建类型为release, 这里采用debug模式用于调试
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_STANDARD 17)      # 设置cpp标准为cpp17
 

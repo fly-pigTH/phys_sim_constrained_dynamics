@@ -137,6 +137,33 @@ const CollisionEventGroup DetectSphereBoxCollisions(
     //   supplementary reading materials.
     //
     // TODO.
+
+    // Task start
+    // 目前只实现一个面的碰撞
+    Vector3r sphere_center = sphere_transformation.first * sphere->c() + sphere_transformation.second;
+    Vector3r box_center = box_transformation.first*box->t() + box_transformation.second;
+    Matrix3r box_frame = box_transformation.first*box->R();
+    // transfer to the box frame
+    Vector3r sphere_center_inboxFrame = box_frame.transpose()*(sphere_center-box_center);
+    // Tip: find the nearest point and judge the result
+    const real closest_point_x = std::clamp(sphere_center_inboxFrame.x(), -box->size().x()/2, box->size().x()/2);
+    const real closest_point_y = std::clamp(sphere_center_inboxFrame.y(), -box->size().y()/2, box->size().y()/2);
+    const real closest_point_z = std::clamp(sphere_center_inboxFrame.z(), -box->size().z()/2, box->size().z()/2);
+    const Vector3r closest_point(closest_point_x, closest_point_y, closest_point_z);
+    const Vector3r closest_point_world = box_frame * closest_point + box_center;
+    const real distance = (closest_point_world - sphere_center).norm();
+
+    if (distance < sphere->r()) {
+        CollisionEvent event;
+        const Vector3r normal = (sphere_center - closest_point_world).normalized();
+        event.local_frame = BuildFrameFromUnitNormal(normal);
+        event.collision_point = closest_point_world;
+        event.distance = distance - sphere->r();
+        info.push_back(event);
+    }
+
+    // Task end
+
     return info;
 }
 
@@ -197,6 +224,24 @@ const CollisionEventGroup DetectSpherePlaneCollisions(
     //   that the sphere collides with the plane.
     //
     // TODO.
+
+    // Task start
+    const Vector3r sphere_center = sphere_transformation.first * sphere->c() + sphere_transformation.second;
+    const Vector3r plane_norm = plane_transformation.first * plane->n();
+    const real plane_offset = plane->offset() + plane_transformation.second.dot(plane_norm);
+    const Matrix3r plane_frame = plane_transformation.first * plane->local_frame();
+
+    CollisionEvent event;
+    if (abs(plane_norm.dot(sphere_center)-plane_offset) < sphere->r()){
+        // We assume the n is always the outside of the half space object
+        // const int sgn = (plane_norm.dot(sphere_center) > plane_offset);         // 判断phere是否在plane的n正一侧
+        event.local_frame = plane_frame;
+        event.collision_point = sphere_center - sphere->r()*plane_norm;
+        event.distance = plane_norm.dot(sphere_center) - plane_offset - sphere->r();
+        info.push_back(event);
+    }
+    // Task end
+
     return info;
 }
 

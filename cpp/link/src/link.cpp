@@ -127,12 +127,13 @@ const Eigen::Matrix<real, 3, 6> Link::ComputePointJacobian(
   	}
     // build the product matrix
     Matrix3r productMatrix = Matrix3r::Zero();
-    productMatrix << 0, -point(2), point(1),
-        			point(2), 0, -point(0),
-        			-point(1), point(0), 0;
+    Vector3r Rp = rotation_ * point;
+    productMatrix << 0, -Rp(2), Rp(1),
+        			Rp(2), 0, -Rp(0),
+        			-Rp(1), Rp(0), 0;
     // concatenate
     Eigen::Matrix<real, 3, 6> jacobian;
-	jacobian << JacobMat, productMatrix*rotation_;
+	jacobian << JacobMat, -productMatrix;
     assert(jacobian.cols() == 6);
     assert(jacobian.rows() == 3);
     // Task Finished

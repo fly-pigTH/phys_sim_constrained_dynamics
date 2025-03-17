@@ -384,7 +384,7 @@ void TestGripper() {
         ImGui::PopItemWidth();
 
         // Call the line below to take a screenshot.
-        // polyscope::screenshot();
+        polyscope::screenshot();        // open here
     };
 
     polyscope::state::userCallback = callback;

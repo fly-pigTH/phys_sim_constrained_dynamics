@@ -51,7 +51,7 @@ private:
     std::array<std::array<DetectCollisionPointer,
         static_cast<integer>(ContactProxyType::kTotalNum)>,
         static_cast<integer>(ContactProxyType::kTotalNum)>
-        collision_detection_table_;
+        collision_detection_table_;     // NOTE: build a table which size is kTotalNum * kTotalNum
 };
 
 // Four types of contact proxies: points, sphere, box, and plane.

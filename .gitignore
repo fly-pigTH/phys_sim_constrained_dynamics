@@ -1,4 +1,6 @@
 .vscode/
+.idea/
+temp_record/
 
 build/
 

@@ -139,7 +139,6 @@ const CollisionEventGroup DetectSphereBoxCollisions(
     // TODO.
 
     // Task start
-    // 目前只实现一个面的碰撞
     Vector3r sphere_center = sphere_transformation.first * sphere->c() + sphere_transformation.second;
     Vector3r box_center = box_transformation.first*box->t() + box_transformation.second;
     Matrix3r box_frame = box_transformation.first*box->R();
